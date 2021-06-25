@@ -23,17 +23,11 @@ contract NFTXv10 is NFTXv9 {
         onlyOwnerIfPaused(1);
         require(store.allowMintRequests(vaultId), "1");
         for (uint256 i = 0; i < nftIds.length; i = i.add(1)) {
-            if (vaultId > 6 && vaultId < 10) {
-                KittyCoreAlt kittyCoreAlt =
-                    KittyCoreAlt(store.nftAddress(vaultId));
-                kittyCoreAlt.transferFrom(msg.sender, address(this), nftIds[i]);
-            } else {
-                store.nft(vaultId).safeTransferFrom(
-                    msg.sender,
-                    address(this),
-                    nftIds[i]
-                );
-            }
+            store.nft(vaultId).safeTransferFrom(
+                msg.sender,
+                address(this),
+                nftIds[i]
+            );
             store.setRequester(vaultId, nftIds[i], msg.sender);
         }
         emit MintRequested(vaultId, nftIds, msg.sender);

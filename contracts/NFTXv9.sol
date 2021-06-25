@@ -28,9 +28,6 @@ contract NFTXv9 is NFTXv8 {
             if (isVault1155[vaultId]) {
                 IERC1155 nft = IERC1155(store.nftAddress(vaultId));
                 nft.safeTransferFrom(address(this), msg.sender, nftId, 1, "");
-            } else if (vaultId > 6 && vaultId < 10) {
-                KittyCore kittyCore = KittyCore(store.nftAddress(vaultId));
-                kittyCore.transfer(msg.sender, nftId);
             } else {
                 store.nft(vaultId).safeTransferFrom(
                     address(this),

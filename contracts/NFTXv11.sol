@@ -17,16 +17,11 @@ contract NFTXv11 is NFTXv10 {
                 "Not requester"
             );
             store.setRequester(vaultId, nftIds[i], address(0));
-            if (vaultId > 6 && vaultId < 10) {
-                KittyCore kittyCore = KittyCore(store.nftAddress(vaultId));
-                kittyCore.transfer(msg.sender, nftIds[i]);
-            } else {
-                store.nft(vaultId).safeTransferFrom(
-                    address(this),
-                    msg.sender,
-                    nftIds[i]
-                );
-            }
+            store.nft(vaultId).safeTransferFrom(
+                address(this),
+                msg.sender,
+                nftIds[i]
+            );
         }
     }
 }

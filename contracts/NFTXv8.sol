@@ -24,12 +24,6 @@ contract NFTXv8 is NFTXv7 {
             if (isVault1155[vaultId]) {
                 IERC1155 nft = IERC1155(store.nftAddress(vaultId));
                 nft.safeTransferFrom(address(this), msg.sender, nftId, 1, "");
-            } else if (vaultId > 6 && vaultId < 10) {
-                store.nft(vaultId).transferFrom(
-                    address(this),
-                    msg.sender,
-                    nftId
-                );
             } else {
                 store.nft(vaultId).safeTransferFrom(
                     address(this),
