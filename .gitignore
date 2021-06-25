@@ -8,3 +8,7 @@ yarn-error.log
 cache
 artifacts
 .openzeppelin
+
+/build
+.secret_dev
+.secret_test
