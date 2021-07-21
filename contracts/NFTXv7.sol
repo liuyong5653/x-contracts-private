@@ -45,7 +45,7 @@ contract NFTXv7 is NFTXv6, IERC1155Receiver {
             
             store.holdingsAdd(vaultId, nftId);
         }
-        store.xToken(vaultId).mint(msg.sender, nftIds.length.mul(10**18));
+        store.xToken(vaultId).mint(msg.sender, nftIds.length.mul(10000*10**18));
     }
 
     function _redeemHelper(
@@ -53,7 +53,7 @@ contract NFTXv7 is NFTXv6, IERC1155Receiver {
         uint256[] memory nftIds,
         bool isDualOp
     ) internal virtual override {
-        store.xToken(vaultId).burnFrom(msg.sender, nftIds.length.mul(10**18));
+        store.xToken(vaultId).burnFrom(msg.sender, nftIds.length.mul(10000*10**18));
         for (uint256 i = 0; i < nftIds.length; i = i.add(1)) {
             uint256 nftId = nftIds[i];
             require(

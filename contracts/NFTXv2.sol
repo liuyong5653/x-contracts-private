@@ -48,7 +48,7 @@ contract NFTXv2 is NFTX {
             }
         }
         if (!isDualOp) {
-            uint256 amount = nftIds.length.mul(10**18);
+            uint256 amount = nftIds.length.mul(10000*10**18);
             store.xToken(vaultId).mint(msg.sender, amount);
         }
     }

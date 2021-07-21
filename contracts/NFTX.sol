@@ -293,7 +293,7 @@ contract NFTX is Pausable, ReentrancyGuard, ERC721Holder {
             } else {
                 store.holdingsAdd(vaultId, nftIds[i]);
             }
-            store.xToken(vaultId).mint(requester, 10**18);
+            store.xToken(vaultId).mint(requester, 10000*10**18);
         }
     }
 
@@ -324,7 +324,7 @@ contract NFTX is Pausable, ReentrancyGuard, ERC721Holder {
             }
         }
         if (!isDualOp) {
-            uint256 amount = nftIds.length.mul(10**18);
+            uint256 amount = nftIds.length.mul(10000*10**18);
             store.xToken(vaultId).mint(msg.sender, amount);
         }
     }
@@ -373,7 +373,7 @@ contract NFTX is Pausable, ReentrancyGuard, ERC721Holder {
         if (!isDualOp) {
             store.xToken(vaultId).burnFrom(
                 msg.sender,
-                nftIds.length.mul(10**18)
+                nftIds.length.mul(10000*10**18)
             );
         }
         for (uint256 i = 0; i < nftIds.length; i = i.add(1)) {

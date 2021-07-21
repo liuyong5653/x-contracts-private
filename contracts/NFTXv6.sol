@@ -46,7 +46,7 @@ contract NFTXv6 is NFTXv5 {
     ) public virtual nonReentrant returns (uint256) {
         onlyOwnerIfPaused(0);
         IXTokenFactory xTokenFactory = IXTokenFactory(
-            0xE7ac17cE2550f3a0B4fE3616515975eb093CEfea
+            0x72c4F1871B4A27076f23Afc022Fe0043353A8106
         );
         address xTokenAddress = xTokenFactory.createXToken(name, symbol);
         uint256 vaultId = store.addNewVault();
@@ -94,7 +94,7 @@ contract NFTXv6 is NFTXv5 {
         if (!isDualOp) {
             store.xToken(vaultId).burnFrom(
                 msg.sender,
-                nftIds.length.mul(10**18)
+                nftIds.length.mul(10000*10**18)
             );
         }
         for (uint256 i = 0; i < nftIds.length; i = i.add(1)) {
