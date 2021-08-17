@@ -24,6 +24,9 @@ contract XStore is Ownable {
         mapping(uint256 => bool) isEligible;
         bool flipEligOnRedeem;
         bool negateEligibility;
+        uint256 rangeStart;
+        uint256 rangeEnd;
+        bool is1155;
         bool isFinalized;
         bool isClosed;
         uint256 ethBalance;
@@ -39,6 +42,8 @@ contract XStore is Ownable {
     event IsEligibleSet(uint256 indexed vaultId, uint256 id, bool _bool);
     event FlipEligOnRedeemSet(uint256 indexed vaultId, bool _bool);
     event NegateEligibilitySet(uint256 indexed vaultId, bool _bool);
+    event RangeSet(uint256 indexed vaultId, uint256 _rangeStart, uint256 _rangeEnd);
+    event Is1155Set(uint256 indexed vaultId, bool _is1155);
     event IsFinalizedSet(uint256 indexed vaultId, bool _isFinalized);
     event IsClosedSet(uint256 indexed vaultId, bool _isClosed);
     event EthBalanceSet(uint256 indexed vaultId, uint256 _ethBalance);
@@ -131,6 +136,16 @@ contract XStore is Ownable {
         return vault.negateEligibility;
     }
 
+    function range(uint256 vaultId) public view returns (uint256, uint256) {
+        Vault storage vault = _getVault(vaultId);
+        return (vault.rangeStart, vault.rangeEnd);
+    }
+
+    function is1155(uint256 vaultId) public view returns (bool) {
+        Vault storage vault = _getVault(vaultId);
+        return vault.is1155;
+    }
+
     function isFinalized(uint256 vaultId) public view returns (bool) {
         Vault storage vault = _getVault(vaultId);
         return vault.isFinalized;
@@ -216,6 +231,25 @@ contract XStore is Ownable {
         Vault storage vault = _getVault(vaultId);
         vault.negateEligibility = negateElig;
         emit NegateEligibilitySet(vaultId, negateElig);
+    }
+
+    function setRange(uint256 vaultId, uint256 _rangeStart, uint256 _rangeEnd)
+        public
+        onlyOwner
+    {
+        Vault storage vault = _getVault(vaultId);
+        vault.rangeStart = _rangeStart;
+        vault.rangeEnd = _rangeEnd;
+        emit RangeSet(vaultId, _rangeStart, _rangeEnd);
+    }
+
+    function setIs1155(uint256 vaultId, bool _is1155)
+        public
+        onlyOwner
+    {
+        Vault storage vault = _getVault(vaultId);
+        vault.is1155 = _is1155;
+        emit Is1155Set(vaultId, _is1155);
     }
 
     function setIsFinalized(uint256 vaultId, bool _isFinalized)

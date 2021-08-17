@@ -32,36 +32,6 @@ contract NFTX is Pausable, ReentrancyGuard, ERC721Holder, IERC1155Receiver {
 
     IXStore public store;
 
-
-
-    // TODO 放xstore中，加事件
-    mapping(uint256 => bool) public isVault1155;
-
-    function setIs1155(
-        uint256 vaultId,
-        bool _boolean
-    ) public virtual {
-        onlyPrivileged(vaultId);
-        isVault1155[vaultId] = _boolean;
-    }
-
-    // TODO 放xstore中，加事件
-    mapping(uint256 => uint256) public rangeStart;
-    mapping(uint256 => uint256) public rangeEnd;
-    function setRange(
-        uint256 vaultId,
-        uint256 start,
-        uint256 end
-    ) public virtual {
-        onlyPrivileged(vaultId);
-        rangeStart[vaultId] = start;
-        rangeEnd[vaultId] = end;
-    }
-
-
-
-
-
     function initialize(address storeAddress) public initializer {
         initOwnable();
         initReentrancyGuard();
@@ -76,14 +46,32 @@ contract NFTX is Pausable, ReentrancyGuard, ERC721Holder, IERC1155Receiver {
         }
     }
 
+    function setIs1155(
+        uint256 vaultId,
+        bool _boolean
+    ) public virtual {
+        onlyPrivileged(vaultId);
+        store.setIs1155(vaultId, _boolean);
+    }
+
+    function setRange(
+        uint256 vaultId,
+        uint256 start,
+        uint256 end
+    ) public virtual {
+        onlyPrivileged(vaultId);
+        store.setRange(vaultId, start, end);
+    }
+
     function isEligible(uint256 vaultId, uint256 nftId)
         public
         view
         virtual
         returns (bool)
     {
-        if (rangeEnd[vaultId] > 0) {
-            if (nftId >= rangeStart[vaultId] && nftId <= rangeEnd[vaultId]) {
+        (uint256 rangeStart, uint256 rangeEnd) = store.range(vaultId);
+        if (rangeEnd > 0) {
+            if (nftId >= rangeStart && nftId <= rangeEnd) {
                 return true;
             }
         }
@@ -119,7 +107,7 @@ contract NFTX is Pausable, ReentrancyGuard, ERC721Holder, IERC1155Receiver {
     ) public virtual nonReentrant returns (uint256) {
         onlyOwnerIfPaused(0);
         IXTokenFactory xTokenFactory = IXTokenFactory(
-            0x72c4F1871B4A27076f23Afc022Fe0043353A8106
+            0x0565bdF713A6F310aa8884F0a392EB489e31CbaF
         );
         address xTokenAddress = xTokenFactory.createXToken(name, symbol);
         uint256 vaultId = store.addNewVault();
@@ -129,10 +117,9 @@ contract NFTX is Pausable, ReentrancyGuard, ERC721Holder, IERC1155Receiver {
         store.setNft(vaultId);
         store.setNegateEligibility(vaultId, true);
         store.setManager(vaultId, msg.sender);
-
-        setIs1155(vaultId, _is1155);
+        store.setIs1155(vaultId, _is1155);
         if(_isFinalize) {
-            finalizeVault(vaultId);
+            store.setIsFinalized(vaultId, true);
         }
         
         emit NewVault(vaultId, msg.sender);
@@ -147,7 +134,7 @@ contract NFTX is Pausable, ReentrancyGuard, ERC721Holder, IERC1155Receiver {
             uint256 nftId = nftIds[i];
             require(isEligible(vaultId, nftId), "1");
             
-            if (isVault1155[vaultId]) {
+            if (store.is1155(vaultId)) {
                 IERC1155 nft = IERC1155(store.nftAddress(vaultId));
                 nft.safeTransferFrom(msg.sender, address(this), nftId, 1, "");
             } else {
@@ -197,7 +184,7 @@ contract NFTX is Pausable, ReentrancyGuard, ERC721Holder, IERC1155Receiver {
                 bool isElig = store.isEligible(vaultId, nftId);
                 store.setIsEligible(vaultId, nftId, !isElig);
             }
-            if (isVault1155[vaultId]) {
+            if (store.is1155(vaultId)) {
                 IERC1155 nft = IERC1155(store.nftAddress(vaultId));
                 nft.safeTransferFrom(address(this), msg.sender, nftId, 1, "");
             } else {

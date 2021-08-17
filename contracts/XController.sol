@@ -79,114 +79,114 @@ contract XController is ControllerBase {
         }
     }
 
-    function executeFuncCall(uint256 fcId) public override virtual {
-        super.executeFuncCall(fcId);
-        if (funcIndex[fcId] == 3) {
-            onlyIfPastDelay(2, time[fcId]);
-            nftx.transferOwnership(addressParam[fcId]);
-        } else if (funcIndex[fcId] == 4) {
-            uint256 percentInc = pendingEligAdditions[uintParam[fcId]]
-                .mul(100)
-                .div(nftx.vaultSize(uintParam[fcId]));
-            if (percentInc > 10) {
-                onlyIfPastDelay(2, time[fcId]);
-            } else if (percentInc > 1) {
-                onlyIfPastDelay(1, time[fcId]);
-            } else {
-                onlyIfPastDelay(0, time[fcId]);
-            }
-            nftx.setIsEligible(
-                uintParam[fcId],
-                uintArrayParam[fcId],
-                boolParam[fcId]
-            );
-            pendingEligAdditions[uintParam[fcId]] = pendingEligAdditions[uintParam[fcId]]
-                .sub(uintArrayParam[fcId].length);
-        } else if (funcIndex[fcId] == 5) {
-            onlyIfPastDelay(0, time[fcId]); // vault must be empty
-            nftx.setNegateEligibility(funcIndex[fcId], boolParam[fcId]);
-        } else if (funcIndex[fcId] == 6) {
-            onlyIfPastDelay(0, time[fcId]);
-            nftx.setShouldReserve(
-                uintParam[fcId],
-                uintArrayParam[fcId],
-                boolParam[fcId]
-            );
-        } else if (funcIndex[fcId] == 7) {
-            onlyIfPastDelay(0, time[fcId]);
-            nftx.setIsReserved(
-                uintParam[fcId],
-                uintArrayParam[fcId],
-                boolParam[fcId]
-            );
-        } else if (funcIndex[fcId] == 8) {
-            onlyIfPastDelay(1, time[fcId]);
-            nftx.changeTokenName(uintParam[fcId], stringParam[fcId]);
-        } else if (funcIndex[fcId] == 9) {
-            onlyIfPastDelay(1, time[fcId]);
-            nftx.changeTokenSymbol(uintParam[fcId], stringParam[fcId]);
-        } else if (funcIndex[fcId] == 10) {
-            onlyIfPastDelay(0, time[fcId]);
-            nftx.closeVault(uintParam[fcId]);
-        } else if (funcIndex[fcId] == 11) {
-            onlyIfPastDelay(0, time[fcId]);
-            nftx.setMintFees(
-                uintArrayParam[fcId][0],
-                uintArrayParam[fcId][1],
-                uintArrayParam[fcId][2]
-            );
-        } else if (funcIndex[fcId] == 12) {
-            (uint256 ethBase, uint256 ethStep) = store.burnFees(
-                uintArrayParam[fcId][0]
-            );
-            uint256 ethBasePercentInc = uintArrayParam[fcId][1].mul(100).div(
-                ethBase
-            );
-            uint256 ethStepPercentInc = uintArrayParam[fcId][2].mul(100).div(
-                ethStep
-            );
-            if (ethBasePercentInc.add(ethStepPercentInc) > 15) {
-                onlyIfPastDelay(2, time[fcId]);
-            } else if (ethBasePercentInc.add(ethStepPercentInc) > 5) {
-                onlyIfPastDelay(1, time[fcId]);
-            } else {
-                onlyIfPastDelay(0, time[fcId]);
-            }
-            nftx.setBurnFees(
-                uintArrayParam[fcId][0],
-                uintArrayParam[fcId][1],
-                uintArrayParam[fcId][2]
-            );
-        } else if (funcIndex[fcId] == 13) {
-            onlyIfPastDelay(0, time[fcId]);
-            nftx.setDualFees(
-                uintArrayParam[fcId][0],
-                uintArrayParam[fcId][1],
-                uintArrayParam[fcId][2]
-            );
-        } else if (funcIndex[fcId] == 14) {
-            (uint256 ethMax, uint256 length) = store.supplierBounty(
-                uintArrayParam[fcId][0]
-            );
-            uint256 ethMaxPercentInc = uintArrayParam[fcId][1].mul(100).div(
-                ethMax
-            );
-            uint256 lengthPercentInc = uintArrayParam[fcId][2].mul(100).div(
-                length
-            );
-            if (ethMaxPercentInc.add(lengthPercentInc) > 20) {
-                onlyIfPastDelay(2, time[fcId]);
-            } else if (ethMaxPercentInc.add(lengthPercentInc) > 5) {
-                onlyIfPastDelay(1, time[fcId]);
-            } else {
-                onlyIfPastDelay(0, time[fcId]);
-            }
-            nftx.setSupplierBounty(
-                uintArrayParam[fcId][0],
-                uintArrayParam[fcId][1],
-                uintArrayParam[fcId][2]
-            );
-        }
-    }
+    // function executeFuncCall(uint256 fcId) public override virtual {
+    //     super.executeFuncCall(fcId);
+    //     if (funcIndex[fcId] == 3) {
+    //         onlyIfPastDelay(2, time[fcId]);
+    //         nftx.transferOwnership(addressParam[fcId]);
+    //     } else if (funcIndex[fcId] == 4) {
+    //         uint256 percentInc = pendingEligAdditions[uintParam[fcId]]
+    //             .mul(100)
+    //             .div(nftx.vaultSize(uintParam[fcId]));
+    //         if (percentInc > 10) {
+    //             onlyIfPastDelay(2, time[fcId]);
+    //         } else if (percentInc > 1) {
+    //             onlyIfPastDelay(1, time[fcId]);
+    //         } else {
+    //             onlyIfPastDelay(0, time[fcId]);
+    //         }
+    //         nftx.setIsEligible(
+    //             uintParam[fcId],
+    //             uintArrayParam[fcId],
+    //             boolParam[fcId]
+    //         );
+    //         pendingEligAdditions[uintParam[fcId]] = pendingEligAdditions[uintParam[fcId]]
+    //             .sub(uintArrayParam[fcId].length);
+    //     } else if (funcIndex[fcId] == 5) {
+    //         onlyIfPastDelay(0, time[fcId]); // vault must be empty
+    //         nftx.setNegateEligibility(funcIndex[fcId], boolParam[fcId]);
+    //     } else if (funcIndex[fcId] == 6) {
+    //         onlyIfPastDelay(0, time[fcId]);
+    //         nftx.setShouldReserve(
+    //             uintParam[fcId],
+    //             uintArrayParam[fcId],
+    //             boolParam[fcId]
+    //         );
+    //     } else if (funcIndex[fcId] == 7) {
+    //         onlyIfPastDelay(0, time[fcId]);
+    //         nftx.setIsReserved(
+    //             uintParam[fcId],
+    //             uintArrayParam[fcId],
+    //             boolParam[fcId]
+    //         );
+    //     } else if (funcIndex[fcId] == 8) {
+    //         onlyIfPastDelay(1, time[fcId]);
+    //         nftx.changeTokenName(uintParam[fcId], stringParam[fcId]);
+    //     } else if (funcIndex[fcId] == 9) {
+    //         onlyIfPastDelay(1, time[fcId]);
+    //         nftx.changeTokenSymbol(uintParam[fcId], stringParam[fcId]);
+    //     } else if (funcIndex[fcId] == 10) {
+    //         onlyIfPastDelay(0, time[fcId]);
+    //         nftx.closeVault(uintParam[fcId]);
+    //     } else if (funcIndex[fcId] == 11) {
+    //         onlyIfPastDelay(0, time[fcId]);
+    //         nftx.setMintFees(
+    //             uintArrayParam[fcId][0],
+    //             uintArrayParam[fcId][1],
+    //             uintArrayParam[fcId][2]
+    //         );
+    //     } else if (funcIndex[fcId] == 12) {
+    //         (uint256 ethBase, uint256 ethStep) = store.burnFees(
+    //             uintArrayParam[fcId][0]
+    //         );
+    //         uint256 ethBasePercentInc = uintArrayParam[fcId][1].mul(100).div(
+    //             ethBase
+    //         );
+    //         uint256 ethStepPercentInc = uintArrayParam[fcId][2].mul(100).div(
+    //             ethStep
+    //         );
+    //         if (ethBasePercentInc.add(ethStepPercentInc) > 15) {
+    //             onlyIfPastDelay(2, time[fcId]);
+    //         } else if (ethBasePercentInc.add(ethStepPercentInc) > 5) {
+    //             onlyIfPastDelay(1, time[fcId]);
+    //         } else {
+    //             onlyIfPastDelay(0, time[fcId]);
+    //         }
+    //         nftx.setBurnFees(
+    //             uintArrayParam[fcId][0],
+    //             uintArrayParam[fcId][1],
+    //             uintArrayParam[fcId][2]
+    //         );
+    //     } else if (funcIndex[fcId] == 13) {
+    //         onlyIfPastDelay(0, time[fcId]);
+    //         nftx.setDualFees(
+    //             uintArrayParam[fcId][0],
+    //             uintArrayParam[fcId][1],
+    //             uintArrayParam[fcId][2]
+    //         );
+    //     } else if (funcIndex[fcId] == 14) {
+    //         (uint256 ethMax, uint256 length) = store.supplierBounty(
+    //             uintArrayParam[fcId][0]
+    //         );
+    //         uint256 ethMaxPercentInc = uintArrayParam[fcId][1].mul(100).div(
+    //             ethMax
+    //         );
+    //         uint256 lengthPercentInc = uintArrayParam[fcId][2].mul(100).div(
+    //             length
+    //         );
+    //         if (ethMaxPercentInc.add(lengthPercentInc) > 20) {
+    //             onlyIfPastDelay(2, time[fcId]);
+    //         } else if (ethMaxPercentInc.add(lengthPercentInc) > 5) {
+    //             onlyIfPastDelay(1, time[fcId]);
+    //         } else {
+    //             onlyIfPastDelay(0, time[fcId]);
+    //         }
+    //         nftx.setSupplierBounty(
+    //             uintArrayParam[fcId][0],
+    //             uintArrayParam[fcId][1],
+    //             uintArrayParam[fcId][2]
+    //         );
+    //     }
+    // }
 
 }
